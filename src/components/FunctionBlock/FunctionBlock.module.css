@@ -1,0 +1,8 @@
+.FunctionBlock {
+    display: inline-flex;
+}
+
+.FunctionBlock i:hover {
+    cursor: pointer;
+
+}
