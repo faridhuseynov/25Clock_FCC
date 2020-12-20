@@ -13,7 +13,7 @@ class Display extends Component {
 
     incrementHandler = (event) => {
        let id = event.target.parentElement.previousSibling.id;
-        if(id==='break-length'){
+        if(id==='break-length' && this.state.breakLength<61){
             this.setState((prevState) => ({
                 ...prevState,
                 breakLength: prevState.breakLength + 1
@@ -21,7 +21,7 @@ class Display extends Component {
                 // console.log(this.state.breakLength);
             })
         }
-        else if(id==='session-length'){
+        else if(id==='session-length' && this.state.sessionLength<61){
             this.setState((prevState) => ({
                 ...prevState,
                 sessionLength: prevState.sessionLength + 1
@@ -82,7 +82,8 @@ class Display extends Component {
                     incrId="session-increment" incrIconClass="fa fa-arrow-up"
                     lengthId="session-length" lengthValue={this.state.sessionLength} lengthIncrease={this.incrementHandler} lengthDecrease={this.decrementHandler}
                 />
-                <Timer statusId="timer-label" timeStatusId="time-left" timerStatus={this.state.timerStatus} sessionLength={this.state.sessionLength}/>
+                <Timer timerProcessStatus={this.state.timerStarted} 
+                timerStatus={this.state.timerStatus} sessionLength={this.state.sessionLength}/>
                 <FunctionBlock startStopClicked={this.startStopHandler} resetClicked={this.resetHandler}/>
             </div>
         )
