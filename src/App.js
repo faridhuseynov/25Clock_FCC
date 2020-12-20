@@ -1,6 +1,6 @@
 // eslint-disable-next-line
 
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './App.css';
 import Display from "./containers/Display/Display"
 
