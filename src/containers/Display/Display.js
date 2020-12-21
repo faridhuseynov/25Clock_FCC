@@ -5,8 +5,8 @@ import FunctionBlock from "../../components/FunctionBlock/FunctionBlock"
 class Display extends Component {
 
     state = {
-        sessionLength: 25,
-        minutes:25,
+        sessionLength: 1,
+        minutes:1,
         seconds:0,
         breakLength: 5,
         timerStarted:false,
@@ -14,16 +14,18 @@ class Display extends Component {
         timerStatus:"Session"
     }
 
-    componentWillUnmount(){
-        clearInterval(this.state.intervalId);
-    }
+    // componentWillUnmount(){
+    //     clearInterval(this.state.intervalId);
+    // }
+
     incrementHandler = (event) => {
        let id = event.target.parentElement.previousSibling.id;
-       let i="";
         if(id==='break-length' && this.state.breakLength<61){
             this.setState((prevState) => ({
                 ...prevState,
-                breakLength: prevState.breakLength + 1
+                breakLength: prevState.breakLength + 1,
+                minutes:prevState.breakLength+1,
+                seconds:0
             }), () => {
                 // console.log(this.state.breakLength);
             })
@@ -32,8 +34,9 @@ class Display extends Component {
 
             this.setState((prevState) => ({
                 ...prevState,
-                sessionLength: (prevState.sessionLength + 1),
-                minutes:(prevState.minutes+1)
+                sessionLength: prevState.sessionLength + 1,
+                minutes:prevState.sessionLength+1,
+                seconds:0
             }), () => {
                 // console.log(this.state.sessionLength);
             })
@@ -45,7 +48,9 @@ class Display extends Component {
          if(id==='break-length' && this.state.breakLength>1){
              this.setState((prevState) => ({
                  ...prevState,
-                 breakLength: prevState.breakLength -1
+                 breakLength: prevState.breakLength -1,
+                 minutes:prevState.breakLength-1,
+                 seconds:0
              }), () => {
                  // console.log(this.state.breakLength);
              })
@@ -53,8 +58,9 @@ class Display extends Component {
          else if(id==='session-length' && this.state.sessionLength>1){
              this.setState((prevState) => ({
                  ...prevState,
-                 sessionLength:(prevState.sessionLength -1),
-                 minutes:(prevState.minutes-1)
+                 sessionLength:prevState.sessionLength -1,
+                 minutes:prevState.sessionLength-1,
+                 seconds:0
 
              }), () => {
                  console.log(this.state.minutes);
@@ -63,41 +69,52 @@ class Display extends Component {
      }
 
     startStopHandler = () => {
-        let i="";
         this.setState((prevState) => ({
             ...prevState,
             timerStarted: !prevState.timerStarted
         }), () => {
             console.log(this.state.timerStarted);
-            if (this.state.timerStarted === true) {
-                let intervalId = setInterval(() => {
-                    if(this.state.seconds===0){
-                        this.setState((prevState)=>({
-                            ...prevState,
-                            minutes:prevState.minutes-1,
-                            seconds:60
-                        }))
-                    }
-                    // if(this.state.seconds<=10){
-                    //     i="0";
-                    // }
-                    this.setState((prevState) => ({
-                        ...prevState,
-                        seconds: (prevState.seconds - 1)
-                    }))
-                    console.log('test');
-                }, 10);
-
-                console.log(this.state.minutes);
-                this.setState(prevState => ({
-                    ...prevState,
-                    intervalId: intervalId
-                }))
-            }
-            else if (!this.state.timerStarted) {
-                clearInterval(this.state.intervalId);
-            }
+            this.runTimer();
         })
+    }
+
+    runTimer(){
+        if (this.state.timerStarted === true ) {
+            //&& !(this.state.minutes===0 && this.state.seconds===0)
+            let intervalId = setInterval(() => {
+                if(this.state.seconds===0){
+                    this.setState((prevState)=>({
+                        ...prevState,
+                        minutes:prevState.minutes-1,
+                        seconds:60
+                    }))
+                }
+                this.setState((prevState) => ({
+                    ...prevState,
+                    seconds: (prevState.seconds - 1)
+                }),()=>{
+                    if(this.state.minutes===0 && this.state.seconds===0){
+                            console.log('end');
+                            this.setState(prevState=>({
+                                ...prevState,
+                                timerStarted:false
+                            }),()=>{
+                                this.changeTimerStatus();
+                            })
+                    }    
+                })
+                // console.log('test');
+            }, 1000);
+
+            console.log(this.state.minutes);
+            this.setState(prevState => ({
+                ...prevState,
+                intervalId: intervalId
+            }))
+        }
+        else if (!this.state.timerStarted || (this.state.minutes===0 && this.state.seconds===0)) {
+            clearInterval(this.state.intervalId);
+        }
     }
 
      resetHandler=()=>{
@@ -116,6 +133,37 @@ class Display extends Component {
              })
          }
      }
+
+    changeTimerStatus() {
+            clearInterval(this.state.intervalId);
+            let newStatus = this.state.timerStatus;
+            newStatus === "Session" ? newStatus = "Break" : newStatus = "Session";
+    
+            if(newStatus==="Session"){
+                this.setState(prevState => ({
+                    ...prevState,
+                    timerStatus:newStatus,
+                    minutes:prevState.sessionLength,
+                    seconds:0,
+                    timerStarted:true
+                }),()=>{
+                    console.log(this.state.timerStatus, this.state.timerStarted);
+                    this.runTimer();
+
+                })
+            }else{
+                this.setState(prevState => ({
+                    ...prevState,
+                    timerStatus:newStatus,
+                    minutes:prevState.breakLength,
+                    seconds:0,
+                    timerStarted:true
+                }),()=>{
+                    console.log(this.state.timerStatus, this.state.timerStarted);
+                    this.runTimer();
+                })
+            }            
+    }
 
     render() {
         return (
