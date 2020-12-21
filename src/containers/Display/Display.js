@@ -6,8 +6,8 @@ class Display extends Component {
 
     state = {
         sessionLength: 25,
-        minutes:"25",
-        seconds:"00",
+        minutes:25,
+        seconds:0,
         breakLength: 5,
         timerStarted:false,
         intervalId:"", // this is required to get the setInterval later
@@ -19,6 +19,7 @@ class Display extends Component {
     }
     incrementHandler = (event) => {
        let id = event.target.parentElement.previousSibling.id;
+       let i="";
         if(id==='break-length' && this.state.breakLength<61){
             this.setState((prevState) => ({
                 ...prevState,
@@ -28,10 +29,11 @@ class Display extends Component {
             })
         }
         else if(id==='session-length' && this.state.sessionLength<60){
+
             this.setState((prevState) => ({
                 ...prevState,
-                sessionLength: prevState.sessionLength + 1,
-                minutes:prevState.minutes+1
+                sessionLength: (prevState.sessionLength + 1),
+                minutes:(prevState.minutes+1)
             }), () => {
                 // console.log(this.state.sessionLength);
             })
@@ -51,11 +53,11 @@ class Display extends Component {
          else if(id==='session-length' && this.state.sessionLength>1){
              this.setState((prevState) => ({
                  ...prevState,
-                 sessionLength: prevState.sessionLength -1,
-                 minutes:prevState.minutes-1
+                 sessionLength:(prevState.sessionLength -1),
+                 minutes:(prevState.minutes-1)
 
              }), () => {
-                 // console.log(this.state.sessionLength);
+                 console.log(this.state.minutes);
              })
          }
      }
@@ -69,22 +71,22 @@ class Display extends Component {
             console.log(this.state.timerStarted);
             if (this.state.timerStarted === true) {
                 let intervalId = setInterval(() => {
-                    if(this.state.seconds==='00'){
+                    if(this.state.seconds===0){
                         this.setState((prevState)=>({
                             ...prevState,
                             minutes:prevState.minutes-1,
                             seconds:60
                         }))
                     }
-                    if(this.state.seconds<=10){
-                        i="0";
-                    }
+                    // if(this.state.seconds<=10){
+                    //     i="0";
+                    // }
                     this.setState((prevState) => ({
                         ...prevState,
-                        seconds: i+(prevState.seconds - 1)
+                        seconds: (prevState.seconds - 1)
                     }))
                     console.log('test');
-                }, 1000);
+                }, 10);
 
                 console.log(this.state.minutes);
                 this.setState(prevState => ({
@@ -107,8 +109,8 @@ class Display extends Component {
              this.setState({
                 sessionLength: 25,
                 breakLength: 5,
-                minutes:"25",
-                seconds:"00",
+                minutes:25,
+                seconds:0,
                 timerStarted:false,
                 timerStatus:"Session"
              })

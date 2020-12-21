@@ -1,10 +1,11 @@
 import React from "react"
 
 const timer = (props) => {
+    {console.log(props.sessionLengthMinutes);}
     return (
         <div>
             <p id="timer-label">{props.timerStatus}</p>
-            <p id="time-left">{props.sessionLengthMinutes} : {props.sessionLengthSeconds}</p>
+            <p id="time-left">{props.sessionLengthMinutes<10?"0":""}{props.sessionLengthMinutes} : {props.sessionLengthSeconds<10?"0":""}{props.sessionLengthSeconds}</p>
         </div>
     )
 }
