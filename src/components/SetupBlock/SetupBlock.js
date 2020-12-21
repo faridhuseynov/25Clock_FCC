@@ -7,11 +7,13 @@ import Length from "../Length/Length";
 import classes from "./SetupBlock.module.css";
 
 const block =(props)=>{
-    return <div className={classes.Block}>
+    return <div>
         <Label labelId={props.idLabel} labelName={props.nameLabel} />
-        <Decrement id={props.decrId} iconClass={props.decrIconClass} clicked={props.lengthDecrease}/>
-        <Length id={props.lengthId} value={props.lengthValue}/>        
-        <Increment id={props.incrId} iconClass={props.incrIconClass} clicked={props.lengthIncrease}/>
+        <div  className="Block">
+            <Decrement id={props.decrId} iconClass={props.decrIconClass} clicked={props.lengthDecrease}/>
+            <Length id={props.lengthId} value={props.lengthValue}/>        
+            <Increment id={props.incrId} iconClass={props.incrIconClass} clicked={props.lengthIncrease}/>
+        </div>
     </div>
 }
 

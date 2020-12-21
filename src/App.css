@@ -31,3 +31,19 @@
 i:hover{
   cursor: pointer;
 }
+
+.Display {
+  width: 600px;
+  display: inline-flex;
+  flex-direction: column;
+}
+
+.SetupBlock {
+  display: flex;
+  justify-content: space-between;
+}
+
+.Block {
+  display: flex;
+  justify-content: space-around;
+}
