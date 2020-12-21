@@ -14,75 +14,71 @@ class Display extends Component {
         timerStatus: "Session"
     }
 
-    componentDidUpdate=(prevProps, prevState)=>{
-        let mins=0;
-        if (!prevState.timerStarted) {
-            if (prevState.timerStatus==="Session") {
-                if(this.state.sessionLength>prevState.sessionLength){
-                    mins = this.state.sessionLength;
-                    this.setState({
-                        minutes:mins
-                    })
-                }
-                else if(this.state.sessionLength<prevState.sessionLength){
-                    mins = this.state.sessionLength;
-                    this.setState({
-                        minutes:mins
-                    })
-                }
-            }
-            if (prevState.timerStatus==="Break") {
-                if(this.state.breakLength>prevState.breakLength){
-                    mins = this.state.breakLength;
-                    this.setState({
-                        minutes:mins
-                    })
-                }
-                else if(this.state.breakLength<prevState.breakLength){
-                    mins = this.state.sessionLength;
-                    this.setState({
-                        minutes:mins
-                    })
-                }
-            }
-        }
-    }
-
+    
     incrementHandler = (event) => {
         let id = event.target.parentElement.previousSibling.id;
-        if (id === 'break-length' && this.state.breakLength < 61) {
-            this.setState((prevState) => ({
-                ...prevState,
-                breakLength: prevState.breakLength + 1,
-                seconds: 0
-            }))
-        }
-        else if (id === 'session-length' && this.state.sessionLength < 60) {
-
-            this.setState((prevState) => ({
-                ...prevState,
-                sessionLength: prevState.sessionLength + 1,
-                seconds: 0
-            }))
+        if(!this.state.timerStarted){
+            if (id === 'break-length' && this.state.breakLength < 61) {
+                this.setState((prevState) => ({
+                    ...prevState,
+                    breakLength: prevState.breakLength + 1,
+                    seconds: 0
+                }),()=>{
+                    if(this.state.timerStatus==="Break"){
+                        this.setState(prevState=>({
+                            minutes: prevState.breakLength
+                        }))
+                    }
+                })
+            }
+            else if (id === 'session-length' && this.state.sessionLength < 60) {
+    
+                this.setState((prevState) => ({
+                    ...prevState,
+                    sessionLength: prevState.sessionLength + 1,
+                    seconds: 0
+                }),()=>{
+                    if(this.state.timerStatus==="Session"){
+                        this.setState(prevState=>({
+                            minutes: prevState.sessionLength
+                        }))
+                    }
+                })
+            }
         }
     }
 
     decrementHandler = (event) => {
-        let id = event.target.parentElement.nextSibling.id;
-        if (id === 'break-length' && this.state.breakLength > 1) {
-            this.setState((prevState) => ({
-                ...prevState,
-                breakLength: prevState.breakLength - 1,
-                seconds: 0
-            }))
-        }
-        else if (id === 'session-length' && this.state.sessionLength > 1) {
-            this.setState((prevState) => ({
-                ...prevState,
-                sessionLength: prevState.sessionLength - 1,
-                seconds: 0
+        if(!this.state.timerStarted){
 
-            }))
+            let id = event.target.parentElement.nextSibling.id;
+            if (id === 'break-length' && this.state.breakLength > 1) {
+                this.setState((prevState) => ({
+                    ...prevState,
+                    breakLength: prevState.breakLength - 1,
+                    seconds: 0
+                }),()=>{
+                    if(this.state.timerStatus==="Break"){
+                        this.setState(prevState=>({
+                            minutes: prevState.breakLength
+                        }))
+                    }
+                })
+            }
+            else if (id === 'session-length' && this.state.sessionLength > 1) {
+                this.setState((prevState) => ({
+                    ...prevState,
+                    sessionLength: prevState.sessionLength - 1,
+                    seconds: 0
+    
+                }),()=>{
+                    if(this.state.timerStatus==="Session"){
+                        this.setState(prevState=>({
+                            minutes: prevState.sessionLength
+                        }))
+                    }
+                })
+            }
         }
     }
 
@@ -91,7 +87,6 @@ class Display extends Component {
             ...prevState,
             timerStarted: !prevState.timerStarted
         }), () => {
-            console.log(this.state.timerStarted);
             this.runTimer();
         })
     }
@@ -111,7 +106,6 @@ class Display extends Component {
                     seconds: (prevState.seconds - 1)
                 }), () => {
                     if (this.state.minutes === 0 && this.state.seconds === 0) {
-                        console.log('end');
                         this.setState(prevState => ({
                             ...prevState,
                             timerStarted: false
@@ -121,7 +115,6 @@ class Display extends Component {
                     }
                 })
             }, 1000);
-            console.log(this.state.minutes);
             this.setState(prevState => ({
                 ...prevState,
                 intervalId: intervalId
@@ -137,16 +130,16 @@ class Display extends Component {
     }
 
     resetFunction() {
-        if (!this.state.timerStarted) {
+        clearInterval(this.state.intervalId);
             this.setState({
                 sessionLength: 25,
                 breakLength: 5,
                 minutes: 25,
                 seconds: 0,
                 timerStarted: false,
-                timerStatus: "Session"
+                timerStatus: "Session",
+                intervalId:""
             })
-        }
     }
 
     changeTimerStatus() {
@@ -165,7 +158,6 @@ class Display extends Component {
                     seconds: 0,
                     timerStarted: true
                 }), () => {
-                    console.log(this.state.timerStatus, this.state.timerStarted);
                     this.runTimer();
 
                 })
@@ -177,7 +169,6 @@ class Display extends Component {
                     seconds: 0,
                     timerStarted: true
                 }), () => {
-                    console.log(this.state.timerStatus, this.state.timerStarted);
                     this.runTimer();
                 })
             }

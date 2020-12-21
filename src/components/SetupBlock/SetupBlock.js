@@ -4,8 +4,6 @@ import Decrement from "../Decrement/Decrement";
 import Increment from "../Increment/Increment";
 import Length from "../Length/Length";
 
-import classes from "./SetupBlock.module.css";
-
 const block =(props)=>{
     return <div>
         <Label labelId={props.idLabel} labelName={props.nameLabel} />
