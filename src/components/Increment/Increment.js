@@ -1,7 +1,8 @@
 import React from "react"
 
 const increment = (props) => {
-    return (<div id={props.incrId} onClick={props.clicked}>
+    return (
+    <div id={props.id} onClick={props.clicked}>
         <i className={props.iconClass}></i>
     </div>)
 }

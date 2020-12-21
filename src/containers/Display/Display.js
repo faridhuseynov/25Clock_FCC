@@ -6,27 +6,28 @@ class Display extends Component {
 
     state = {
         sessionLength: 25,
-        minutes: 25,
+        minutes: 5,
         seconds: 0,
         breakLength: 5,
         timerStarted: false,
         intervalId: "", // this is required to get the setInterval later
-        timerStatus: "Session"
+        timerStatus: "Break"
     }
 
     
     incrementHandler = (event) => {
         let id = event.target.parentElement.previousSibling.id;
         if(!this.state.timerStarted){
-            if (id === 'break-length' && this.state.breakLength < 61) {
+            if (id === 'break-length' && this.state.breakLength < 60) {
                 this.setState((prevState) => ({
-                    ...prevState,
-                    breakLength: prevState.breakLength + 1,
-                    seconds: 0
+                    // ...prevState,
+                    breakLength: prevState.breakLength + 1
                 }),()=>{
                     if(this.state.timerStatus==="Break"){
                         this.setState(prevState=>({
-                            minutes: prevState.breakLength
+                            minutes: prevState.breakLength,
+                            seconds: 0
+
                         }))
                     }
                 })
@@ -34,13 +35,13 @@ class Display extends Component {
             else if (id === 'session-length' && this.state.sessionLength < 60) {
     
                 this.setState((prevState) => ({
-                    ...prevState,
-                    sessionLength: prevState.sessionLength + 1,
-                    seconds: 0
+                    // ...prevState,
+                    sessionLength: prevState.sessionLength + 1
                 }),()=>{
                     if(this.state.timerStatus==="Session"){
                         this.setState(prevState=>({
-                            minutes: prevState.sessionLength
+                            minutes: prevState.sessionLength,
+                            seconds: 0
                         }))
                     }
                 })
@@ -54,27 +55,27 @@ class Display extends Component {
             let id = event.target.parentElement.nextSibling.id;
             if (id === 'break-length' && this.state.breakLength > 1) {
                 this.setState((prevState) => ({
-                    ...prevState,
-                    breakLength: prevState.breakLength - 1,
-                    seconds: 0
+                    // ...prevState,
+                    breakLength: prevState.breakLength - 1
                 }),()=>{
                     if(this.state.timerStatus==="Break"){
                         this.setState(prevState=>({
-                            minutes: prevState.breakLength
+                            minutes: prevState.breakLength,
+                            seconds: 0
                         }))
                     }
                 })
             }
             else if (id === 'session-length' && this.state.sessionLength > 1) {
                 this.setState((prevState) => ({
-                    ...prevState,
+                    // ...prevState,
                     sessionLength: prevState.sessionLength - 1,
-                    seconds: 0
     
                 }),()=>{
                     if(this.state.timerStatus==="Session"){
                         this.setState(prevState=>({
-                            minutes: prevState.sessionLength
+                            minutes: prevState.sessionLength,
+                            seconds: 0
                         }))
                     }
                 })
@@ -106,15 +107,10 @@ class Display extends Component {
                     seconds: (prevState.seconds - 1)
                 }), () => {
                     if (this.state.minutes === 0 && this.state.seconds === 0) {
-                        this.setState(prevState => ({
-                            ...prevState,
-                            timerStarted: false
-                        }), () => {
                             this.changeTimerStatus();
-                        })
                     }
                 })
-            }, 1000);
+            }, 1);
             this.setState(prevState => ({
                 ...prevState,
                 intervalId: intervalId
@@ -176,7 +172,6 @@ class Display extends Component {
     }
 
     render() {
-        let source = "https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav";
         return (
             <div className="Display">
                 <div className="SetupBlock">
@@ -192,7 +187,6 @@ class Display extends Component {
                 <Timer timerProcessStatus={this.state.timerStarted}
                     timerStatus={this.state.timerStatus} sessionLengthMinutes={this.state.minutes} sessionLengthSeconds={this.state.seconds} />
                 <FunctionBlock startStopClicked={this.startStopHandler} resetClicked={this.resetHandler} />
-                <audio id="beep" preload="auto" loop src={source}></audio>
             </div>
         )
     }

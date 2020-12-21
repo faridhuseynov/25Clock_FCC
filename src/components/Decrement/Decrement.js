@@ -1,7 +1,7 @@
 import React from "react"
 
 const decrement =(props)=>{
-    return(<div id={props.decrId} onClick={props.clicked}>
+    return(<div id={props.id} onClick={props.clicked}>
         <i className={props.iconClass}></i>
     </div>)
 }

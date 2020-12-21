@@ -4,7 +4,7 @@ import Decrement from "../Decrement/Decrement";
 import Increment from "../Increment/Increment";
 import Length from "../Length/Length";
 
-const block =(props)=>{
+const setupBlock =(props)=>{
     return <div>
         <Label labelId={props.idLabel} labelName={props.nameLabel} />
         <div  className="Block">
@@ -15,4 +15,4 @@ const block =(props)=>{
     </div>
 }
 
-export default block;
+export default setupBlock;
