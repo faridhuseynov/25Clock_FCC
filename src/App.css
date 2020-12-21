@@ -5,7 +5,7 @@
 
 
 .App-header {
-  background-color: #282c34;
+  background-color: #032055;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -15,9 +15,7 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
-}
+
 
 @keyframes App-logo-spin {
   from {
@@ -36,14 +34,24 @@ i:hover{
   width: 600px;
   display: inline-flex;
   flex-direction: column;
+  align-items: center;
 }
 
 .SetupBlock {
   display: flex;
   justify-content: space-between;
+  width: 500px;
 }
 
 .Block {
   display: flex;
   justify-content: space-around;
+}
+
+.Timer {
+  margin-top: 15px;
+  margin-bottom: 10px;
+  width: 200px;
+  border: 2px solid rgb(14, 86, 128);
+  border-radius: 15px;
 }
