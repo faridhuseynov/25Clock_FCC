@@ -16,9 +16,9 @@ class Display extends Component {
 
     
     incrementHandler = (event) => {
-        let id = event.target.parentElement.previousSibling.id;
+        // let id = event.target.parentElement.previousSibling.id;
         if(!this.state.timerStarted){
-            if (id === 'break-length' && this.state.breakLength < 60) {
+            if (event === "break" && this.state.breakLength < 60) {
                 this.setState((prevState) => ({
                     // ...prevState,
                     breakLength: prevState.breakLength + 1
@@ -32,7 +32,7 @@ class Display extends Component {
                     }
                 })
             }
-            else if (id === 'session-length' && this.state.sessionLength < 60) {
+            else if (event === "session" && this.state.sessionLength < 60) {
     
                 this.setState((prevState) => ({
                     // ...prevState,
@@ -51,9 +51,8 @@ class Display extends Component {
 
     decrementHandler = (event) => {
         if(!this.state.timerStarted){
-
-            let id = event.target.parentElement.nextSibling.id;
-            if (id === 'break-length' && this.state.breakLength > 1) {
+            // let id = event.target.parentElement.nextSibling.id;
+            if (event === "break" && this.state.breakLength > 1) {
                 this.setState((prevState) => ({
                     // ...prevState,
                     breakLength: prevState.breakLength - 1
@@ -66,7 +65,7 @@ class Display extends Component {
                     }
                 })
             }
-            else if (id === 'session-length' && this.state.sessionLength > 1) {
+            else if (event === "session" && this.state.sessionLength > 1) {
                 this.setState((prevState) => ({
                     // ...prevState,
                     sessionLength: prevState.sessionLength - 1,
@@ -144,30 +143,30 @@ class Display extends Component {
         signal.play();
         let newStatus = this.state.timerStatus;
         newStatus === "Session" ? newStatus = "Break" : newStatus = "Session";
+        if (newStatus === "Session") {
+            this.setState(prevState => ({
+                ...prevState,
+                timerStatus: newStatus,
+                minutes: prevState.sessionLength,
+                seconds: 0,
+                timerStarted: true
+            }), () => {
+                this.runTimer();
+
+            })
+        } else {
+            this.setState(prevState => ({
+                ...prevState,
+                timerStatus: newStatus,
+                minutes: prevState.breakLength,
+                seconds: 0,
+                timerStarted: true
+            }), () => {
+                this.runTimer();
+            })
+        }
         setTimeout(() => {
             signal.pause();
-            if (newStatus === "Session") {
-                this.setState(prevState => ({
-                    ...prevState,
-                    timerStatus: newStatus,
-                    minutes: prevState.sessionLength,
-                    seconds: 0,
-                    timerStarted: true
-                }), () => {
-                    this.runTimer();
-
-                })
-            } else {
-                this.setState(prevState => ({
-                    ...prevState,
-                    timerStatus: newStatus,
-                    minutes: prevState.breakLength,
-                    seconds: 0,
-                    timerStarted: true
-                }), () => {
-                    this.runTimer();
-                })
-            }
         }, 2000);
     }
 
@@ -177,11 +176,13 @@ class Display extends Component {
                 <div className="SetupBlock">
                     <SetupBlock idLabel="break-label" nameLabel="Break Length" decrId="break-decrement" decrIconClass="fa fa-arrow-down"
                         incrId="break-increment" incrIconClass="fa fa-arrow-up"
-                        lengthId="break-length" lengthValue={this.state.breakLength} lengthIncrease={this.incrementHandler} lengthDecrease={this.decrementHandler}
+                        lengthId="break-length" lengthValue={this.state.breakLength}
+                        lengthIncrease={()=>this.incrementHandler("break")} lengthDecrease={()=>this.decrementHandler("break")}
                     />
                     <SetupBlock idLabel="session-label" nameLabel="Session Length" decrId="session-decrement" decrIconClass="fa fa-arrow-down"
                         incrId="session-increment" incrIconClass="fa fa-arrow-up"
-                        lengthId="session-length" lengthValue={this.state.sessionLength} lengthIncrease={this.incrementHandler} lengthDecrease={this.decrementHandler}
+                        lengthId="session-length" lengthValue={this.state.sessionLength}
+                        lengthIncrease={()=>this.incrementHandler("session")} lengthDecrease={()=>this.decrementHandler("session")}
                     />
                 </div>
                 <Timer timerProcessStatus={this.state.timerStarted}
