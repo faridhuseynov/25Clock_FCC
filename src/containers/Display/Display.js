@@ -104,8 +104,7 @@ class Display extends Component {
                     }    
                 })
                 // console.log('test');
-            }, 1000);
-
+            }, 100);
             console.log(this.state.minutes);
             this.setState(prevState => ({
                 ...prevState,
@@ -139,33 +138,36 @@ class Display extends Component {
             let newStatus = this.state.timerStatus;
             newStatus === "Session" ? newStatus = "Break" : newStatus = "Session";
     
-            if(newStatus==="Session"){
-                this.setState(prevState => ({
-                    ...prevState,
-                    timerStatus:newStatus,
-                    minutes:prevState.sessionLength,
-                    seconds:0,
-                    timerStarted:true
-                }),()=>{
-                    console.log(this.state.timerStatus, this.state.timerStarted);
-                    this.runTimer();
-
-                })
-            }else{
-                this.setState(prevState => ({
-                    ...prevState,
-                    timerStatus:newStatus,
-                    minutes:prevState.breakLength,
-                    seconds:0,
-                    timerStarted:true
-                }),()=>{
-                    console.log(this.state.timerStatus, this.state.timerStarted);
-                    this.runTimer();
-                })
-            }            
+            setTimeout(() => {
+                if(newStatus==="Session"){
+                    this.setState(prevState => ({
+                        ...prevState,
+                        timerStatus:newStatus,
+                        minutes:prevState.sessionLength,
+                        seconds:0,
+                        timerStarted:true
+                    }),()=>{
+                        console.log(this.state.timerStatus, this.state.timerStarted);
+                        this.runTimer();
+    
+                    })
+                }else{
+                    this.setState(prevState => ({
+                        ...prevState,
+                        timerStatus:newStatus,
+                        minutes:prevState.breakLength,
+                        seconds:0,
+                        timerStarted:true
+                    }),()=>{
+                        console.log(this.state.timerStatus, this.state.timerStarted);
+                        this.runTimer();
+                    })
+                }            
+            }, 2000);
     }
 
     render() {
+        let source = "https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav";
         return (
             <div>
                 <SetupBlock  idLabel="break-label" nameLabel="Break Length" decrId="break-decrement" decrIconClass="fa fa-arrow-down"
@@ -179,6 +181,7 @@ class Display extends Component {
                 <Timer timerProcessStatus={this.state.timerStarted} 
                 timerStatus={this.state.timerStatus} sessionLengthMinutes={this.state.minutes} sessionLengthSeconds={this.state.seconds}/>
                 <FunctionBlock startStopClicked={this.startStopHandler} resetClicked={this.resetHandler}/>
+                {this.state.timerStarted===true?(<audio id="beep" preload="auto" autoplay loop src={source}></audio>):(<audio id="beep" preload="auto" src={source}></audio>)}
             </div>
         )
     }
